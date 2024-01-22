@@ -11,29 +11,37 @@ def afficher_menu():
     print("7. M'encourager")
 
 def afficher_liste(taches):
+    print("\n----- Liste des Tâches -----")
     if not taches:
         print("Aucune tâche en cours.")
     else:
         for index, tache in enumerate(taches, start=1):
             print(f"{index}. {tache}")
+    print("-----------------------------\n")
 
 def ajouter_tache(taches, nouvelle_tache):
     taches.append(nouvelle_tache)
     sauvegarder_taches(taches)
-    print("Tâche ajoutée avec succès.")
+    print("\nTâche ajoutée avec succès.\n")
 
 def marquer_terminee(taches, index):
     if 1 <= index <= len(taches):
         tache_terminee = taches.pop(index - 1)
         sauvegarder_taches(taches)
         sauvegarder_tache_terminee(tache_terminee)
-        print(f"Tâche '{tache_terminee}' marquée comme terminée.")
+        print(f"\nTâche '{tache_terminee}' marquée comme terminée.\n")
     else:
-        print("Index invalide.")
+        print("\nIndex invalide.\n")
 
 def afficher_taches_terminees():
+    print("\n----- Tâches Terminées -----")
     taches_terminees = charger_taches_terminees()
-    afficher_liste(taches_terminees)
+    if not taches_terminees:
+        print("Aucune tâche terminée.")
+    else:
+        for tache in taches_terminees:
+            print(f"- {tache}")
+    print("-----------------------------\n")
 
 def supprimer_tache(taches, index):
     if 1 <= index <= len(taches):
