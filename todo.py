@@ -5,8 +5,9 @@ def afficher_menu():
     print("1. Afficher la liste")
     print("2. Ajouter une tâche")
     print("3. Marquer une tâche comme terminée")
-    print("4. Supprimer une tâche")
-    print("5. Quitter")
+    print("4. Afficher les tâches terminées")
+    print("5. Supprimer une tâche")
+    print("6. Quitter")
 
 def afficher_liste(taches):
     if not taches:
@@ -24,9 +25,14 @@ def marquer_terminee(taches, index):
     if 1 <= index <= len(taches):
         tache_terminee = taches.pop(index - 1)
         sauvegarder_taches(taches)
+        sauvegarder_tache_terminee(tache_terminee)
         print(f"Tâche '{tache_terminee}' marquée comme terminée.")
     else:
         print("Index invalide.")
+
+def afficher_taches_terminees():
+    taches_terminees = charger_taches_terminees()
+    afficher_liste(taches_terminees)
 
 def supprimer_tache(taches, index):
     if 1 <= index <= len(taches):
@@ -41,6 +47,10 @@ def sauvegarder_taches(taches):
         for tache in taches:
             fichier.write(f"{tache}\n")
 
+def sauvegarder_tache_terminee(tache):
+    with open("done.txt", "a") as fichier:
+        fichier.write(f"{tache}\n")
+
 def charger_taches():
     taches = []
     if os.path.exists("todo.txt"):
@@ -48,12 +58,19 @@ def charger_taches():
             taches = [ligne.strip() for ligne in fichier.readlines()]
     return taches
 
+def charger_taches_terminees():
+    taches_terminees = []
+    if os.path.exists("done.txt"):
+        with open("done.txt", "r") as fichier:
+            taches_terminees = [ligne.strip() for ligne in fichier.readlines()]
+    return taches_terminees
+
 def main():
     taches = charger_taches()
 
     while True:
         afficher_menu()
-        choix = input("Choisissez une option (1-5): ")
+        choix = input("Choisissez une option (1-6): ")
 
         if choix == "1":
             afficher_liste(taches)
@@ -64,10 +81,16 @@ def main():
             index_terminee = int(input("Entrez le numéro de la tâche terminée : "))
             marquer_terminee(taches, index_terminee)
         elif choix == "4":
+            print("\n=== Tâches terminées ===")
+            afficher_taches_terminees()
+        elif choix == "5":
             index_supprimer = int(input("Entrez le numéro de la tâche à supprimer : "))
             supprimer_tache(taches, index_supprimer)
-        elif choix == "5":
+        elif choix == "6":
             print("Au revoir !")
             break
         else:
-            print
+            print("Choix invalide. Veuillez choisir une option valide.")
+
+if __name__ == "__main__":
+    main()
