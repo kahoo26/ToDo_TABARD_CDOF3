@@ -8,6 +8,7 @@ def afficher_menu():
     print("4. Afficher les tâches terminées")
     print("5. Supprimer une tâche")
     print("6. Quitter")
+    print("7. M'encourager")
 
 def afficher_liste(taches):
     if not taches:
@@ -70,7 +71,7 @@ def main():
 
     while True:
         afficher_menu()
-        choix = input("Choisissez une option (1-6): ")
+        choix = input("Choisissez une option (1-7): ")
 
         if choix == "1":
             afficher_liste(taches)
@@ -89,6 +90,9 @@ def main():
         elif choix == "6":
             print("Au revoir !")
             break
+        elif choix == "7":
+            print()
+            print("Courage ! Tu vas le faire !")
         else:
             print("Choix invalide. Veuillez choisir une option valide.")
 
