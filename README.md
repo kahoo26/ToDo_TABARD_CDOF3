@@ -11,3 +11,5 @@ You can contribute by modifying the todo.py file, feel free to add new functionn
 How to use the application :
     run the file, the different actions will be explained
     Everything is controlled by number input !
+
+Feel free to add any change
