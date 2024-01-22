@@ -1,163 +1,73 @@
-# module required
-import sys
-import datetime
+import os
 
+def afficher_menu():
+    print("\n=== Todo List ===")
+    print("1. Afficher la liste")
+    print("2. Ajouter une tâche")
+    print("3. Marquer une tâche comme terminée")
+    print("4. Supprimer une tâche")
+    print("5. Quitter")
 
-# help function
-def help():
-	sa = """Usage :-
-$ ./todo add "todo item" # Add a new todo
-$ ./todo ls			 # Show remaining todos
-$ ./todo del NUMBER	 # Delete a todo
-$ ./todo done NUMBER	 # Complete a todo
-$ ./todo help			 # Show usage
-$ ./todo report		 # Statistics"""
-	sys.stdout.buffer.write(sa.encode('utf8'))
+def afficher_liste(taches):
+    if not taches:
+        print("Aucune tâche en cours.")
+    else:
+        for index, tache in enumerate(taches, start=1):
+            print(f"{index}. {tache}")
 
+def ajouter_tache(taches, nouvelle_tache):
+    taches.append(nouvelle_tache)
+    sauvegarder_taches(taches)
+    print("Tâche ajoutée avec succès.")
 
-# function to add item in todo list
-def add(s):
+def marquer_terminee(taches, index):
+    if 1 <= index <= len(taches):
+        tache_terminee = taches.pop(index - 1)
+        sauvegarder_taches(taches)
+        print(f"Tâche '{tache_terminee}' marquée comme terminée.")
+    else:
+        print("Index invalide.")
 
-	f = open('todo.txt', 'a')
-	f.write(s)
-	f.write("\n")
-	f.close()
-	s = '"'+s+'"'
-	print(f"Added todo: {s}")
+def supprimer_tache(taches, index):
+    if 1 <= index <= len(taches):
+        tache_supprimee = taches.pop(index - 1)
+        sauvegarder_taches(taches)
+        print(f"Tâche '{tache_supprimee}' supprimée avec succès.")
+    else:
+        print("Index invalide.")
 
+def sauvegarder_taches(taches):
+    with open("todo.txt", "w") as fichier:
+        for tache in taches:
+            fichier.write(f"{tache}\n")
 
-# Function to print the todo list items
-def ls():
+def charger_taches():
+    taches = []
+    if os.path.exists("todo.txt"):
+        with open("todo.txt", "r") as fichier:
+            taches = [ligne.strip() for ligne in fichier.readlines()]
+    return taches
 
-	try:
+def main():
+    taches = charger_taches()
 
-		nec()
-		l = len(d)
-		k = l
+    while True:
+        afficher_menu()
+        choix = input("Choisissez une option (1-5): ")
 
-		for i in d:
-			sys.stdout.buffer.write(f"[{l}] {d[l]}".encode('utf8'))
-			sys.stdout.buffer.write("\n".encode('utf8'))
-			l = l-1
-
-	except Exception as e:
-		raise e
-
-
-# Function to Complete a todo
-def done(no):
-	try:
-
-		nec()
-		no = int(no)
-		f = open('done.txt', 'a')
-		st = 'x '+str(datetime.datetime.today()).split()[0]+' '+d[no]
-		
-		f.write(st)
-		f.write("\n")
-		f.close()
-		print(f"Marked todo #{no} as done.")
-		
-		with open("todo.txt", "r+") as f:
-			lines = f.readlines()
-			f.seek(0)
-			
-			for i in lines:
-				if i.strip('\n') != d[no]:
-					f.write(i)
-			f.truncate()
-	except:
-		print(f"Error: todo #{no} does not exist.")
-
-
-# Function to show report/statistics of todo list
-def report():
-	nec()
-	try:
-
-		nf = open('done.txt', 'r')
-		c = 1
-		
-		for line in nf:
-			line = line.strip('\n')
-			don.update({c: line})
-			c = c+1
-		print(
-			f'{str(datetime.datetime.today()).split()[0]} Pending : {len(d)} Completed : {len(don)}')
-	
-	except:
-		print(
-			f'{str(datetime.datetime.today()).split()[0]} Pending : {len(d)} Completed : {len(don)}')
-
-
-# code
-def deL(no):
-	try:
-		no = int(no)
-		nec()
-
-		# utility function defined in main
-		with open("todo.txt", "r+") as f:
-			lines = f.readlines()
-			f.seek(0)
-			
-			for i in lines:
-				if i.strip('\n') != d[no]:
-					f.write(i)
-			f.truncate()
-		print(f"Deleted todo #{no}")
-
-	except Exception as e:
-	
-		print(f"Error: todo #{no} does not exist. Nothing deleted.")
-
-
-# code
-def nec():
-
-# utility function used in done and report function
-	try:
-		f = open('todo.txt', 'r')
-		c = 1
-		for line in f:
-			line = line.strip('\n')
-			d.update({c: line})
-			c = c+1
-	except:
-		sys.stdout.buffer.write("There are no pending todos!".encode('utf8'))
-
-
-# Main program
-if __name__ == '__main__':
-	try:
-		d = {}
-		don = {}
-		args = sys.argv
-		
-		if(args[1] == 'del'):
-			args[1] = 'deL'
-			
-		if(args[1] == 'add' and len(args[2:]) == 0):
-			sys.stdout.buffer.write(
-				"Error: Missing todo string. Nothing added!".encode('utf8'))
-
-		elif(args[1] == 'done' and len(args[2:]) == 0):
-			sys.stdout.buffer.write(
-				"Error: Missing NUMBER for marking todo as done.".encode('utf8'))
-
-		elif(args[1] == 'deL' and len(args[2:]) == 0):
-			sys.stdout.buffer.write(
-				"Error: Missing NUMBER for deleting todo.".encode('utf8'))
-		else:
-			globals()[args[1]](*args[2:])
-
-	except Exception as e:
-
-		s = """Usage :-
-$ ./todo add "todo item" # Add a new todo
-$ ./todo ls			 # Show remaining todos
-$ ./todo del NUMBER	 # Delete a todo
-$ ./todo done NUMBER	 # Complete a todo
-$ ./todo help			 # Show usage
-$ ./todo report		 # Statistics"""
-		sys.stdout.buffer.write(s.encode('utf8'))
+        if choix == "1":
+            afficher_liste(taches)
+        elif choix == "2":
+            nouvelle_tache = input("Entrez la nouvelle tâche : ")
+            ajouter_tache(taches, nouvelle_tache)
+        elif choix == "3":
+            index_terminee = int(input("Entrez le numéro de la tâche terminée : "))
+            marquer_terminee(taches, index_terminee)
+        elif choix == "4":
+            index_supprimer = int(input("Entrez le numéro de la tâche à supprimer : "))
+            supprimer_tache(taches, index_supprimer)
+        elif choix == "5":
+            print("Au revoir !")
+            break
+        else:
+            print
