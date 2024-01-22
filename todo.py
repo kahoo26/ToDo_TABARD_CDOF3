@@ -89,8 +89,6 @@ def main():
         elif choix == "6":
             print("Au revoir !")
             break
-        else:
-            print("Choix invalide. Veuillez choisir une option valide.")
 
 if __name__ == "__main__":
     main()
